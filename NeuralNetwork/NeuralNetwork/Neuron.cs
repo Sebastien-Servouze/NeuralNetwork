@@ -9,6 +9,7 @@ namespace NN
 { 
     public class Neuron
     {
+        public static Random RandomSingleton = new Random(DateTime.Now.Millisecond);
         public double[] Inputs { get; set; }
         public double[] Weights { get; set; }
         public double Bias
@@ -35,7 +36,7 @@ namespace NN
             }
         }
 
-        public Neuron(int nbInputs, int minInitWeight = 0, int maxInitWeight = 0)
+        public Neuron(int nbInputs, double minInitWeight = 0, double maxInitWeight = 0)
         {
             if (nbInputs <= 0)
                 throw new Exception("Un neurone ne peut pas avoir moins d'une entrée");
@@ -46,9 +47,9 @@ namespace NN
             for (int i = 0; i < Weights.Length; i++)
             {
                 if (minInitWeight == maxInitWeight)
-                    Weights[i] = NeuralNetwork.RandomSingleton.NextDouble();
+                    Weights[i] = RandomSingleton.NextDouble();
                 else
-                    Weights[i] = NeuralNetwork.RandomSingleton.Next(minInitWeight, maxInitWeight);
+                    Weights[i] = RandomSingleton.Next(minInitWeight, maxInitWeight);
             }
 
             // Bias

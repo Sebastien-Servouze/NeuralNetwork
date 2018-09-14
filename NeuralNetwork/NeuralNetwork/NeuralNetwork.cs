@@ -6,7 +6,6 @@ namespace NN
 {
     public class NeuralNetwork
     {
-        public static Random RandomSingleton = new Random();
         public Neuron[][] Layers { get; set; }
         public double[] Outputs { get; private set; }
         public int TotalWeights { get; private set; }
@@ -45,6 +44,35 @@ namespace NN
                     TotalWeights += Layers[li][ni].Weights.Length;
                 }
             }
+        }
+
+        public NeuralNetwork(int nbInputs, double minWeight, double maxWeight, params int[] nbNeuronPerLayer)
+        {
+            Layers = new Neuron[nbNeuronPerLayer.Length][];
+
+            // Création de la couche d'entrée
+            Layers[0] = new Neuron[nbNeuronPerLayer[0]];
+            for (int ni = 0; ni < Layers[0].Length; ni++)
+            {
+                Layers[0][ni] = new Neuron(nbInputs);
+                TotalWeights += Layers[0][ni].Weights.Length;
+            }
+
+            // Création des couches cachées / sortie
+            for (int li = 1; li < Layers.Length; li++)
+            {
+                Layers[li] = new Neuron[nbNeuronPerLayer[li]];
+                for (int ni = 0; ni < Layers[li].Length; ni++)
+                {
+                    Layers[li][ni] = new Neuron(Layers[li - 1].Length, minWeight, maxWeight);
+                    TotalWeights += Layers[li][ni].Weights.Length;
+                }
+            }
+        }
+
+        public void RandomizeWeights(double min, double max)
+        {
+
         }
 
         public void ComputeOutput(double[] inputs, IActivationFunction activationFunction)
